@@ -30,8 +30,6 @@ export default function App() {
     try {
       setQuery(query);
       setPage(1);
-      if (data?.results.length === 0)
-        toast.error('No movies found for your request.');
     } catch {
       toast.error(`${error}`);
     }
