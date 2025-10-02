@@ -1,5 +1,5 @@
 import css from './App.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { Toaster, toast } from 'react-hot-toast';
 import { fetchMovies } from '../../services/movieService';
@@ -17,22 +17,25 @@ export default function App() {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, error, isLoading, isError, isSuccess } = useQuery({
+  const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ['movies', query, page],
     queryFn: () => fetchMovies(query, page),
     enabled: query !== '',
     placeholderData: keepPreviousData,
+    
   });
 
   const totalPages = data?.total_pages ?? 0;
 
+  useEffect(() => {
+  if (isSuccess && data.results.length === 0) {
+    toast.error('No movies found for your request.');
+  }
+  }, [])
+
   const handleSearch = async (query: string) => {
-    try {
-      setQuery(query);
-      setPage(1);
-    } catch {
-      toast.error(`${error}`);
-    }
+    setQuery(query);
+    setPage(1);
   };
 
   const openModal = (movie: Movie) => {
