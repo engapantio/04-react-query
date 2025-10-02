@@ -31,7 +31,7 @@ export default function App() {
   if (isSuccess && data.results.length === 0) {
     toast.error('No movies found for your request.');
   }
-  }, [])
+  }, [data])
 
   const handleSearch = async (query: string) => {
     setQuery(query);
